@@ -22,7 +22,7 @@ final class PollNeonParticipants extends Command
      * @var string
      */
     #[Override]
-    protected $signature = 'neon:poll-participants {--date= : Date to process (defaults to today)}';
+    protected $signature = 'neon:poll-participants {--date= : Date to process Y-m-d(defaults to today)}';
 
     /**
      * The console command description.
@@ -54,9 +54,11 @@ final class PollNeonParticipants extends Command
             return;
         }
 
-        $this->info(sprintf('🔍 Collecting participant records that have been added or updated today - %s....', $date));
+        $date = $date->format('Y-m-d 00:00:00');
+
+        $this->info(sprintf('🔍 Collecting participant records that have been added or updated since - %s....', $date));
         // $toReturn = $this->getParticipantIdsByDate($todaysDate);
-        $fullRecords = $this->neonApi->getFullParticipantRecordsByDate($date->format('Y-m-d'));
+        $fullRecords = $this->neonApi->getFullParticipantRecordsByDate($date);
         $count = count($fullRecords);
         $this->info(sprintf('📋 Found %d new or updated participant records.', $count));
 
